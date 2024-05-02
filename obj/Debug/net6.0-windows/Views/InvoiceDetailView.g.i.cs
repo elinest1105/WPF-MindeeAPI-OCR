@@ -53,7 +53,7 @@ namespace MindeeAPI_OCR.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/MindeeAPI-OCR;component/views/invoicedetailview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/MindeeAPI-OCR;V1.0.0.0;component/views/invoicedetailview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\InvoiceDetailView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

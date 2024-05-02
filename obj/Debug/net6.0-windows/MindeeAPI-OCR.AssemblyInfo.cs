@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MindeeAPI-OCR")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+22338ddbf945c73760eb34f6a34d11668efb9a3f")]
 [assembly: System.Reflection.AssemblyProductAttribute("MindeeAPI-OCR")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MindeeAPI-OCR")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
