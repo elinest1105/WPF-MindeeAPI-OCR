@@ -8,9 +8,11 @@ namespace MindeeAPI_OCR.Models
 {
     public class Invoice
     {
-        public string InvoiceNumber { get; set; }
-        public string InvoiceName { get; set;}
-        public string VatNumber { get; set;}
+        public DateTime Date { get; set; }
+        public string SupplierName {  get; set; }
+        public string InvoiceId { get; set; }
+        public Int32 TotalAmount { get; set;}
+        public Boolean IsIntegrated { get; set;}
 
     }
 }

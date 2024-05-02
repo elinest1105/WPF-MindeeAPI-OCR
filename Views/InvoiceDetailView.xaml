@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:MindeeAPI_OCR.Views"
         mc:Ignorable="d"
         Title="InvoiceDetailView" Height="450" Width="800">
-    <Grid>
-        
+    <Grid Margin="10">
+        <TextBlock Text="Invoice Details" FontWeight="Bold" FontSize="14"/>
+        <!-- Add more UI elements here to show details -->
     </Grid>
 </Window>

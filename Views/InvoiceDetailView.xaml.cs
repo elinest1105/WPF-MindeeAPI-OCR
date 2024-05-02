@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MindeeAPI_OCR.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace MindeeAPI_OCR.Views
     /// </summary>
     public partial class InvoiceDetailView : Window
     {
-        public InvoiceDetailView()
+        public InvoiceDetailView(Invoice invoice)
         {
             InitializeComponent();
         }

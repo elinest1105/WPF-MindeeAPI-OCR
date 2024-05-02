@@ -12,9 +12,9 @@ namespace MindeeAPI_OCR.Services
     {
         private readonly string _apiKey;
 
-        public MindeeApiClient()
+        public MindeeApiClient(string apikey)
         {
-            _apiKey = App.Configuration["MindeeApi:ApiKey"];
+            _apiKey = apikey;
         }
 
         public async Task<string> ExtractInvoiceDataAsync(string imagePath)
@@ -23,13 +23,26 @@ namespace MindeeAPI_OCR.Services
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Token {_apiKey}");
 
-            var form = new MultipartFormDataContent();
-            form.Add(new ByteArrayContent(File.ReadAllBytes(imagePath)), "document", Path.GetFileName(imagePath));
+            try
+            {
+                var form = new MultipartFormDataContent();
+                form.Add(new ByteArrayContent(File.ReadAllBytes(imagePath)), "document", Path.GetFileName(imagePath));
 
-            var response = await httpClient.PostAsync(url, form);
-            response.EnsureSuccessStatusCode();
+                var response = await httpClient.PostAsync(url, form);
+                response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsStringAsync();
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new ApplicationException("Unable to contact the Mindee API", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred processing the image", ex);
+            }
+
+            
         }
     }
 }
