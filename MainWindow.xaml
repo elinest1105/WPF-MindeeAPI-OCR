@@ -16,10 +16,10 @@
         <ListView Name="lvInvoices" Margin="10" MouseDoubleClick="LvInvoices_MouseDoubleClick">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date}" Width="100"/>
-                    <GridViewColumn Header="Supplier Name" DisplayMemberBinding="{Binding SupplierName}" Width="150"/>
-                    <GridViewColumn Header="Invoice Number" DisplayMemberBinding="{Binding InvoiceId}" Width="100"/>
-                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding TotalAmount}" Width="100"/>
+                    <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date}" Width="150"/>
+                    <GridViewColumn Header="Supplier Name" DisplayMemberBinding="{Binding SupplierName}" Width="200"/>
+                    <GridViewColumn Header="Invoice Number" DisplayMemberBinding="{Binding InvoiceNumber}" Width="150"/>
+                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding TotalAmount}" Width="150"/>
                     <GridViewColumn Header="Status" DisplayMemberBinding="{Binding IsIntegrated}" Width="100"/>
                 </GridView>
             </ListView.View>
