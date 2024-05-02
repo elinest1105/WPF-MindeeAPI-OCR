@@ -1,0 +1,25 @@
+﻿<Window x:Class="MindeeAPI_OCR.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MindeeAPI_OCR"
+        mc:Ignorable="d"
+        Title="Invoice Summary" Height="450" Width="800">
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="10">
+            <Button x:Name="btnImport" Content="Import Invoices" Click="BtnImport_Click"/>
+        </StackPanel>
+        <ListView Name="lvInvoices" Margin="10" MouseDoubleClick="LvInvoices_MouseDoubleClick">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date}" Width="100"/>
+                    <GridViewColumn Header="Supplier Name" DisplayMemberBinding="{Binding SupplierName}" Width="150"/>
+                    <GridViewColumn Header="Invoice Number" DisplayMemberBinding="{Binding InvoiceId}" Width="100"/>
+                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding TotalAmount}" Width="100"/>
+                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding IsIntegrated}" Width="100"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</Window>
