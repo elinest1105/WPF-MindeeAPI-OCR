@@ -23,6 +23,7 @@ namespace MindeeAPI_OCR.Views
         public InvoiceDetailView(Invoice invoice)
         {
             InitializeComponent();
+            DataContext = invoice;
         }
     }
 }
