@@ -23,7 +23,7 @@ namespace MindeeAPI_OCR
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    { 
+    {  
         public ObservableCollection<Invoice> Invoices { get; set; } = new ObservableCollection<Invoice>();
         public MainWindow()
         {
@@ -46,6 +46,7 @@ namespace MindeeAPI_OCR
                     try
                     {
                         string extractedDataJson = await App.MindeeClient.ExtractInvoiceDataAsync(filename);
+                        //string extractedDataJson = await App.AffindaClient.ExtractInvoiceData(filename);
                         Invoice newInvoice = ParseInvoiceData(extractedDataJson);
                         Invoices.Add(newInvoice);
                     }
@@ -77,9 +78,9 @@ namespace MindeeAPI_OCR
                 {
                     Description = item["description"]?.Value<string>(),
                     ProductCode = item["product_code"]?.Value<string>(),
-                    Quantity = item["quantity"] != null ? Convert.ToDouble(item["quantity"]) : 0,
-                    UnitPrice = item["unit_price"] != null ? decimal.Parse((string)item["unit_price"]) : 0,
-                    TotalAmount = item["total_amount"] != null ? decimal.Parse((string)(item["total_amount"])) : 0,
+                    Quantity = item["quantity"]?.Value<string>(),
+                    UnitPrice = item["unit_price"]?.Value<string>(),
+                    TotalAmount = item["total_amount"]?.Value<string>(),
                     TaxRate = item["tax_rate"]?.Value<string>(),
                     Unit = item["unit"]?.Value<string>(),
                     Code = item["code"]?.Value<string>(),

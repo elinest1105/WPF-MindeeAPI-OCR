@@ -6,21 +6,82 @@
         xmlns:local="clr-namespace:MindeeAPI_OCR"
         mc:Ignorable="d"
         Title="Invoice Summary" Height="450" Width="800">
+    
     <Window.Background>
         <ImageBrush ImageSource="/bgImage.jpg"/>
     </Window.Background>
+    <Window.Resources>
+        <!-- Style for the column headers -->
+        <Style TargetType="GridViewColumnHeader">
+            <Setter Property="Background" Value="#FFE7ECE6"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+            <!-- Right border -->
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+
+        <Style TargetType="Border">
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+    </Window.Resources>
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="10">
-            <Button x:Name="btnImport" Content="Import Invoices" Click="BtnImport_Click"/>
+            <Button x:Name="btnImport" Content="Import Invoices" Click="BtnImport_Click" Width="96" Height="32" Background="#FFDDDDDD"/>
         </StackPanel>
         <ListView Name="lvInvoices" Margin="10" MouseDoubleClick="LvInvoices_MouseDoubleClick">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date}" Width="150"/>
-                    <GridViewColumn Header="Supplier Name" DisplayMemberBinding="{Binding SupplierName}" Width="200"/>
-                    <GridViewColumn Header="Invoice Number" DisplayMemberBinding="{Binding InvoiceNumber}" Width="150"/>
-                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding TotalAmount}" Width="150"/>
-                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding IsIntegrated}" Width="100"/>
+                    <GridViewColumn Header="Date" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White">
+                                    <TextBlock Text="{Binding Date}" TextAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Supplier Name" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White">
+                                    <TextBlock Text="{Binding SupplierName}" TextAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Invoice Number" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White">
+                                    <TextBlock Text="{Binding InvoiceNumber}" TextAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Total" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White">
+                                    <TextBlock Text="{Binding TotalAmount, StringFormat='{}{0:C}'}" TextAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Status" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White">
+                                    <TextBlock Text="{Binding IsIntegrated}" TextAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

@@ -14,6 +14,7 @@ namespace MindeeAPI_OCR
     {
         public static IConfiguration Configuration { get; private set; }
         public static MindeeApiClient MindeeClient { get; private set; }
+        public static AffindaApiClient AffindaClient { get; private set; }
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -27,6 +28,9 @@ namespace MindeeAPI_OCR
 
             var apiKey = Configuration["MindeeApi:ApiKey"];
             MindeeClient = new MindeeApiClient(apiKey);
+
+            var api_key = Configuration["AffindaApi:ApiKey"];
+            AffindaClient = new AffindaApiClient(api_key);
         }
     }
 

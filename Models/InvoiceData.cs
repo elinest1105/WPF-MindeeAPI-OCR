@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 
 namespace MindeeAPI_OCR.Models
 {
-    public class Invoice
+    public class InvoiceData
     {
         public string InvoiceNumber { get; set; }
         public DateTime? Date { get; set; }
         public string SupplierName { get; set; }
-        public List<LineItem> LineItems { get; set; }
+        public List<TableItem> TableItems { get; set; }
         public decimal? TotalAmount { get; set; }
         public decimal? TotalTax { get; set; }
         public decimal? TotalNet { get; set; }
     }
 
 
-    public class LineItem
+    public class TableItem
     {
         public string Description { get; set; }
         public string ProductCode { get; set; }
