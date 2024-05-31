@@ -39,21 +39,34 @@ namespace MindeeAPI_OCR
                 Filter = "All files (*.*)|*.*|Image files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png",
             };
 
-            if (dlg.ShowDialog () == true)
+            if (dlg.ShowDialog() == true)
             {
-                foreach (string filename in dlg.FileNames)
+                ProgressDialog progressDialog = new ProgressDialog();
+                progressDialog.Show();
+
+                try
                 {
-                    try
+                    foreach (string filename in dlg.FileNames)
                     {
-                        string extractedDataJson = await App.MindeeClient.ExtractInvoiceDataAsync(filename);
-                        //string extractedDataJson = await App.AffindaClient.ExtractInvoiceData(filename);
-                        Invoice newInvoice = ParseInvoiceData(extractedDataJson);
-                        Invoices.Add(newInvoice);
+                        try
+                        {
+                            progressDialog.Dispatcher.Invoke(() =>
+                            {
+                                progressDialog.UpdateStatus($"Processing {filename}...");
+                            });
+                            string extractedDataJson = await App.MindeeClient.ExtractInvoiceDataAsync(filename);
+                            Invoice newInvoice = ParseInvoiceData(extractedDataJson);
+                            Invoices.Add(newInvoice);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error processing file {filename}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error processing file {filename}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                }
+                finally
+                {
+                    progressDialog.Close();
                 }
             }
         }

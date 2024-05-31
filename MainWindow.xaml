@@ -5,22 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MindeeAPI_OCR"
         mc:Ignorable="d"
-        Title="Invoice Summary" Height="450" Width="800">
-    
+        Title="Invoice Summary" Height="509" Width="800">
+
     <Window.Background>
         <ImageBrush ImageSource="/bgImage.jpg"/>
     </Window.Background>
     <Window.Resources>
         <!-- Style for the column headers -->
         <Style TargetType="GridViewColumnHeader">
-            <Setter Property="Background" Value="#FFE7ECE6"/>
-            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="#FF8D021F"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontSize" Value="14"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="BorderThickness" Value="0,0,1,0"/>
             <!-- Right border -->
-            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderBrush" Value="White"/>
             <Setter Property="Padding" Value="5"/>
         </Style>
 
@@ -29,6 +29,15 @@
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="Background" Value="White"/>
         </Style>
+
+        <!-- TextBlock style for content alignment and font size -->
+        <Style TargetType="TextBlock" x:Key="CenterAlignedText">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="14"/>
+            <!-- Increase font size here -->
+        </Style>
+
     </Window.Resources>
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="10">
@@ -40,17 +49,17 @@
                     <GridViewColumn Header="Date" Width="150">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White">
-                                    <TextBlock Text="{Binding Date}" TextAlignment="Center" VerticalAlignment="Center"/>
+                                <Border>
+                                    <TextBlock Text="{Binding Date}" Style="{StaticResource CenterAlignedText}"/>
                                 </Border>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Supplier Name" Width="200">
+                    <GridViewColumn Header="Supplier Name" Width="250">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White">
-                                    <TextBlock Text="{Binding SupplierName}" TextAlignment="Center" VerticalAlignment="Center"/>
+                                <Border>
+                                    <TextBlock Text="{Binding SupplierName}" Style="{StaticResource CenterAlignedText}"/>
                                 </Border>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -58,17 +67,17 @@
                     <GridViewColumn Header="Invoice Number" Width="150">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White">
-                                    <TextBlock Text="{Binding InvoiceNumber}" TextAlignment="Center" VerticalAlignment="Center"/>
+                                <Border>
+                                    <TextBlock Text="{Binding InvoiceNumber}" Style="{StaticResource CenterAlignedText}"/>
                                 </Border>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Total" Width="150">
+                    <GridViewColumn Header="Total" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White">
-                                    <TextBlock Text="{Binding TotalAmount, StringFormat='{}{0:C}'}" TextAlignment="Center" VerticalAlignment="Center"/>
+                                <Border>
+                                    <TextBlock Text="{Binding TotalAmount, StringFormat='{}{0:C}'}" Style="{StaticResource CenterAlignedText}"/>
                                 </Border>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -76,8 +85,8 @@
                     <GridViewColumn Header="Status" Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White">
-                                    <TextBlock Text="{Binding IsIntegrated}" TextAlignment="Center" VerticalAlignment="Center"/>
+                                <Border>
+                                    <TextBlock Text="{Binding IsIntegrated}" Style="{StaticResource CenterAlignedText}"/>
                                 </Border>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
