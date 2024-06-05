@@ -1,7 +1,7 @@
 ﻿using MindeeAPI_OCR.Models;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,14 +16,11 @@ using System.Windows.Shapes;
 
 namespace MindeeAPI_OCR.Views
 {
-    /// <summary>
-    /// Interaction logic for InvoiceDetailView.xaml
-    /// </summary>
     public partial class InvoiceDetailView : Window
     {
         private Invoice _invoice;
+        private string _connectionString = "Server=DESKTOP-H75KJ60\\INSTANCE2024;Database=mindee;User Id=sa;Password=root;";
 
-        private string _connectionString = "server=localhost;port=3306;database=mindee;username=root;password=root;";
         public InvoiceDetailView(Invoice invoice)
         {
             InitializeComponent();
@@ -54,10 +51,10 @@ namespace MindeeAPI_OCR.Views
 
         private bool InvoiceExists(string invoiceNumber)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var cmd = new MySqlCommand("SELECT COUNT(*) FROM Invoices WHERE InvoiceNumber = @InvoiceNumber", connection);
+                var cmd = new SqlCommand("SELECT COUNT(*) FROM Invoices WHERE InvoiceNumber = @InvoiceNumber", connection);
                 cmd.Parameters.AddWithValue("@InvoiceNumber", invoiceNumber);
                 var count = Convert.ToInt32(cmd.ExecuteScalar());
                 return count > 0;
@@ -69,8 +66,9 @@ namespace MindeeAPI_OCR.Views
             string[] sqlStatements = new string[]
             {
                 @"
-                CREATE TABLE IF NOT EXISTS Invoices (
-                    InvoiceId INT AUTO_INCREMENT PRIMARY KEY,
+                IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Invoices')
+                CREATE TABLE Invoices (
+                    InvoiceId INT IDENTITY(1,1) PRIMARY KEY,
                     InvoiceNumber VARCHAR(255) UNIQUE,
                     SupplierName VARCHAR(255),
                     Date DATE,
@@ -80,9 +78,10 @@ namespace MindeeAPI_OCR.Views
                 );
                 ",
                 @"
-                CREATE TABLE IF NOT EXISTS LineItems (
-                    Id INT AUTO_INCREMENT PRIMARY KEY,
-                    InvoiceNumber VARCHAR(255),
+                IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'LineItems')
+                CREATE TABLE LineItems (
+                    Id INT IDENTITY(1,1) PRIMARY KEY,
+                    InvoiceId INT,
                     Description VARCHAR(255),
                     ProductCode VARCHAR(255),
                     Quantity VARCHAR(255),
@@ -91,27 +90,26 @@ namespace MindeeAPI_OCR.Views
                     TaxRate VARCHAR(255),
                     Unit VARCHAR(255),
                     Code VARCHAR(255),
-                    FOREIGN KEY (InvoiceNumber) REFERENCES Invoices(InvoiceNumber)
+                    FOREIGN KEY (InvoiceId) REFERENCES Invoices(InvoiceId)
                 );
                 "
             };
 
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 foreach (var sql in sqlStatements)
                 {
-                    using (var command = new MySqlCommand(sql, connection))
+                    using (var command = new SqlCommand(sql, connection))
                     {
                         try
                         {
                             await command.ExecuteNonQueryAsync();
                         }
-                        catch (MySqlException ex)
+                        catch (SqlException ex)
                         {
-                            // Log error or handle it as needed
-                            Console.WriteLine($"Error creating database schema: {ex.Message}");
-                            throw; // Re-throw if you want to propagate the error up the call stack
+                            MessageBox.Show($"Error creating database schema: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            throw;
                         }
                     }
                 }
@@ -120,33 +118,42 @@ namespace MindeeAPI_OCR.Views
 
         private void SaveInvoice(Invoice invoice)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                // Save the main invoice first
-                var cmd = new MySqlCommand("INSERT INTO Invoices (InvoiceNumber, Date, TotalAmount, TotalTax, TotalNet, SupplierName) VALUES (@InvoiceNumber, @Date, @TotalAmount, @TotalTax, @TotalNet, @SupplierName)", connection);
-                cmd.Parameters.AddWithValue("@InvoiceNumber", invoice.InvoiceNumber);
-                cmd.Parameters.AddWithValue("@Date", invoice.Date);
-                cmd.Parameters.AddWithValue("@TotalAmount", invoice.TotalAmount);
-                cmd.Parameters.AddWithValue("@TotalTax", invoice.TotalTax);
-                cmd.Parameters.AddWithValue("@TotalNet", invoice.TotalNet);
-                cmd.Parameters.AddWithValue("@SupplierName", invoice.SupplierName);
-                cmd.ExecuteNonQuery();
+                var cmd = new SqlCommand("INSERT INTO Invoices (InvoiceNumber, Date, TotalAmount, TotalTax, TotalNet, SupplierName) OUTPUT INSERTED.InvoiceId VALUES (@InvoiceNumber, @Date, @TotalAmount, @TotalTax, @TotalNet, @SupplierName)", connection);
+                cmd.Parameters.AddWithValue("@InvoiceNumber", invoice.InvoiceNumber ?? string.Empty);
+                if(invoice.Date.HasValue)
+                {
+                    cmd.Parameters.AddWithValue("@Date", invoice.Date);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Date", DBNull.Value);
+                }
 
-                // Save line items
+                cmd.Parameters.AddWithValue("@TotalAmount", invoice.TotalAmount ?? 0);
+                cmd.Parameters.AddWithValue("@TotalTax", invoice.TotalTax ?? 0);
+                cmd.Parameters.AddWithValue("@TotalNet", invoice.TotalNet ?? 0);
+                cmd.Parameters.AddWithValue("@SupplierName", invoice.SupplierName ?? string.Empty);
+                int invoiceId = (int)cmd.ExecuteScalar();
+
                 foreach (var item in invoice.LineItems)
                 {
-                    var itemCmd = new MySqlCommand("INSERT INTO LineItems (InvoiceNumber, Description, ProductCode, Quantity, UnitPrice, TotalAmount, TaxRate, Unit, Code) VALUES (@InvoiceNumber, @Description, @ProductCode, @Quantity, @UnitPrice, @TotalAmount, @TaxRate, @Unit, @Code)", connection);
-                    itemCmd.Parameters.AddWithValue("@InvoiceNumber", invoice.InvoiceNumber);
-                    itemCmd.Parameters.AddWithValue("@Description", item.Description);
-                    itemCmd.Parameters.AddWithValue("@ProductCode", item.ProductCode);
-                    itemCmd.Parameters.AddWithValue("@Quantity", item.Quantity);
-                    itemCmd.Parameters.AddWithValue("@UnitPrice", item.UnitPrice);
-                    itemCmd.Parameters.AddWithValue("@TotalAmount", item.TotalAmount);
-                    itemCmd.Parameters.AddWithValue("@TaxRate", item.TaxRate);
-                    itemCmd.Parameters.AddWithValue("@Unit", item.Unit);
-                    itemCmd.Parameters.AddWithValue("@Code", item.Code);
+                    var itemCmd = new SqlCommand("INSERT INTO LineItems (InvoiceId, Description, ProductCode, Quantity, UnitPrice, TotalAmount, TaxRate, Unit, Code) VALUES (@InvoiceId, @Description, @ProductCode, @Quantity, @UnitPrice, @TotalAmount, @TaxRate, @Unit, @Code)", connection);
+
+                    // Add parameters here
+                    itemCmd.Parameters.AddWithValue("@InvoiceId", invoiceId);
+                    itemCmd.Parameters.AddWithValue("@Description", item.Description ?? string.Empty);
+                    itemCmd.Parameters.AddWithValue("@ProductCode", item.ProductCode ?? string.Empty);
+                    itemCmd.Parameters.AddWithValue("@Quantity", item.Quantity ?? string.Empty);
+                    itemCmd.Parameters.AddWithValue("@UnitPrice", item.UnitPrice ?? "0"); 
+                    itemCmd.Parameters.AddWithValue("@TotalAmount", item.TotalAmount ?? "0");
+                    itemCmd.Parameters.AddWithValue("@TaxRate", item.TaxRate ?? "0");
+                    itemCmd.Parameters.AddWithValue("@Unit", item.Unit ?? string.Empty);
+                    itemCmd.Parameters.AddWithValue("@Code", item.Code ?? string.Empty); 
+
                     itemCmd.ExecuteNonQuery();
                 }
             }
